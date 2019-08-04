@@ -136,7 +136,41 @@ unsigned int translate(char c) {
 	} else if (isUpperCase(c)) {
 		return segTransUpp[c - UPPERCASEDIFF];
 	} else {
-		return 0;
+		switch(c) {
+			case '!' : return 0x0C81; break;
+			case '\"' : return 0x0042; break;
+			case '#' : return 0x154E; break;
+			case '$' : return 0x2649; break;
+			case '%' : return 0x08A2; break;
+			case '&' : return 0x3B91; break;
+			case '\'' : return 0x0002; break;
+			case '(' : return 0x0280; break;
+			case ')' : return 0x2800; break;
+			case '*' : return 0x2EC0; break;
+			case '+' : return 0x1540; break;
+			case ',' : return 0x0800; break;
+			case '-' : return 0x1100; break;
+			case '.' : return 0x0400; break;
+			case '/' : return 0x0880; break;
+			case ':' : return 0x0440; break;
+			case ';' : return 0x0840; break;
+			case '<' : return 0x0888; break;
+			case '=' : return 0x1108; break;
+			case '>' : return 0x2208; break;
+			case '?' : return 0x0503; break;
+			case '@' : return 0x1A37; break;
+			case '[' : return 0x0039; break;
+			case '\\' : return 0x2200; break;
+			case ']' : return 0x000F; break;
+			case '^' : return 0x0A00; break;
+			case '_' : return 0x0008; break;
+			case '`' : return 0x2000; break;
+			case '{' : return 0x1280; break;
+			case '|' : return 0x0006; break;
+			case '}' : return 0x2900; break;
+			case '~' : return 0x0914; break;
+			default : return 0;
+		}
 	}
 }
 
