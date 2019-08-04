@@ -1,0 +1,38 @@
+\documentclass[12pt, landscape]{article}
+\usepackage[letterpaper, total={10in, 7.5in}]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{multicol}
+\renewcommand{\ttdefault}{txtt}
+\renewcommand{\familydefault}{\ttdefault}
+\setlength{\columnsep}{4em}
+\definecolor{commentCode}{gray}{0.25}
+\lstdefinestyle{ardu}{
+	breaklines=true,
+	numbers=left,
+	commentstyle=\color{commentCode}\textit,
+	keywordstyle=\textbf,
+	showstringspaces=false,
+	frame=single,
+	tabsize=2
+}
+\lstset{style=ardu}
+\begin{document}
+	\small
+	\lstinputlisting[language=c, lastline=37]{cc_FTSD.ino}
+	\begin{multicols}{2}
+		\lstinputlisting[language=c, firstline=39, firstnumber=39, lastline=62]{cc_FTSD.ino}
+		\columnbreak
+		\lstinputlisting[language=c, firstline=63, firstnumber=63, lastline=90]{cc_FTSD.ino}
+		\columnbreak
+		\lstinputlisting[language=c, firstline=91, firstnumber=91, lastline=118]{cc_FTSD.ino}
+		\lstinputlisting[language=c, firstline=123, firstnumber=123, lastline=130]{cc_FTSD.ino}
+		\columnbreak
+		\lstinputlisting[language=c, firstline=131, firstnumber=131, lastline=141]{cc_FTSD.ino}
+	\end{multicols}
+	\pagebreak
+	\lstinputlisting[language=c, firstline=143, firstnumber=143, lastline=179]{cc_FTSD.ino}
+	\pagebreak
+	\footnotesize
+	\lstinputlisting[language=c, firstline=181, firstnumber=181, lastline=223]{cc_FTSD.ino}
+\end{document}
