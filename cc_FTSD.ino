@@ -141,7 +141,7 @@ unsigned int translate(char c) {
 			case '\"' : return 0x0042; break;
 			case '#' : return 0x154E; break;
 			case '$' : return 0x2649; break;
-			case '%' : return 0x08A2; break;
+			case '%' : return 0x08A4; break;
 			case '&' : return 0x3B91; break;
 			case '\'' : return 0x0002; break;
 			case '(' : return 0x0280; break;
@@ -176,7 +176,7 @@ unsigned int translate(char c) {
 
 byte i, j, high, low, loops, temp;
 char c;
-unsigned int t;
+unsigned int t, addr, k;
 String message;
 byte mesgLen;
 void setup() {
@@ -188,26 +188,39 @@ void setup() {
 	digitalWrite(CLOCKPIN, LOW);
 	digitalWrite(STROBEPIN, HIGH);
 
+	Serial.begin(9600);
+	Serial.println("14 Segment Display with Programmable Message");
+
 	loops = 0;
 	j = 0;
 	message = "";
-
-	temp = EEPROM.read(0);
+	
+	low = EEPROM.read(1022);
+	high = EEPROM.read(1023);
+	//Serial.println("HIGH: " + String(high) + "; LOW: " + String(low));
+	addr = high;
+	addr = addr << HIGHSHIFT;
+	addr = addr | low;
+	//Serial.println("Message address: " + String(addr));
+	
+	temp = EEPROM.read(addr);
 	if (temp > 0 && temp <= 128) {
-		i = 1;
+		Serial.println("Stored message found! Length is " + String(temp));
+		k = addr + 1;
+		//Serial.println(String(addr + temp));
 		do {
-			c = EEPROM.read(i);
+			c = EEPROM.read(k);
+			Serial.print(c);
 			message.concat(c);
-			i++;
-		} while (i <= temp && c != 0 && c != 0xFF);
+			k++;
+		} while (k <= addr + temp && c != 0 && c != 0xFF);
+		Serial.println();
 	} else {
+		Serial.println("Error! Cannot find stored message!");
 		message = "PLEASE SET THIS MESSAGE VIA A SERIAL LINK   ";
 	}
 	mesgLen = message.length();
 
-	Serial.begin(9600);
-	Serial.println("14 Segment Display with Programmable Message");
-	Serial.println("Stored message length: " + String(mesgLen));
 	Serial.println("Send a new message if you like (limit of 128 chars)");
 	Serial.print("$ ");
 }
@@ -222,11 +235,11 @@ void loop() {
 		shiftOut(DATAPIN, CLOCKPIN, MSBFIRST, high);
 		shiftOut(DATAPIN, CLOCKPIN, MSBFIRST, low);
 		digitalWrite(STROBEPIN, HIGH);
-		delay(6);
+		delay(5);
 	}
 
 	loops++;
-	if (loops == 10) {
+	if (loops == 8) {
 		loops = 0;
 		j++;
 		j %= mesgLen;
@@ -243,12 +256,19 @@ void loop() {
 			mesgLen = message.length();
 			Serial.println("Message recieved! Length: " + String(mesgLen));
 			Serial.println("Message: " + message);
-			EEPROM.write(0, mesgLen);
-			for (i = 0; i < mesgLen; i++) {
-				EEPROM.write(i + 1, message.charAt(i));
+			addr = (unsigned int) random(2, 1020 - mesgLen);
+			Serial.println("Message Address will be " + String(addr));
+			low = addr & LOWMASK;
+			high = addr >> HIGHSHIFT;
+			//Serial.println("HIGH: " + String(high) + "; LOW: " + String(low));
+			EEPROM.write(1022, low);
+			EEPROM.write(1023, high);
+			EEPROM.write(addr, mesgLen);
+			for (k = addr; k < addr + mesgLen; k++) {
+				EEPROM.write(k + 1, message.charAt(k - addr));
 			}
-			EEPROM.write(i + 1, 0);
-			Serial.println("Length Confirmation (Read from EEPROM): " + String(EEPROM.read(0)));
+			EEPROM.write(k + 1, 0);
+			Serial.println("Length Confirmation (Read from EEPROM): " + String(EEPROM.read(addr)));
 			Serial.print("$ ");
 			j = 0;
 			loops = 0;
