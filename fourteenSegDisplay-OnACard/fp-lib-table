@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name fourteenSegDisplay-OnACard)(type KiCad)(uri ${KIPRJMOD}/fourteenSegDisplay-OnACard.pretty)(options "")(descr ""))
+)

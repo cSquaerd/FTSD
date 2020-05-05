@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name fourteenSegDisplay-OnACard-rescue)(type Legacy)(uri ${KIPRJMOD}/fourteenSegDisplay-OnACard-rescue.lib)(options "")(descr ""))
+)
